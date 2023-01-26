@@ -1,6 +1,8 @@
 {% extends 'sidebar.html' %}
 {% load static %}
 
+
+
 <title>Turma {{turma.nome}}</title>
 
 
@@ -10,9 +12,44 @@
 .mural{display: none;}
 </style>
 
+<div class="content">
+
+    {% if request.user == turma.adm %}
+
+    <div class="dropdown">
+        <button class="createAviso dropdown" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <img src="{% static 'svg/create.svg' %}">
+                   Criar
+        </button>
+        
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item aviso" href="{% url 'turmas:criarPost' turma.codigo 'aviso' %}"><img src="{% static 'svg/notice.svg' %}">aviso</a>
+            <a class="dropdown-item" href="{% url 'turmas:criarPost' turma.codigo 'atividade' %}"><img src="{% static 'svg/activity.svg' %}"> atividade</a>
+            <a class="dropdown-item trabalho" href="{% url 'turmas:criarPost' turma.codigo 'trabalho' %}"><img src="{% static 'svg/work.svg' %}">Trabalho</a>
+            <a class="dropdown-item" href="{% url 'turmas:criarPost' turma.codigo 'prova' %}"><img src="{% static 'svg/proof.svg' %}">Prova</a>
+        </div>
+    </div>
+
+    {% endif %}
+
+
+
+
 <div id="avisos" class="mural">
     <div id="mural">
-        <h1>avisos</h1>
+
+
+
+        {% for aviso in avisos reversed %}
+
+            <h1>{{ aviso.nome }}</h1>
+
+        {% empty %}
+
+            <h1>Não existe nenhum aviso</h1>
+
+        {% endfor %}
+
     </div> 
 </div>
     
@@ -21,8 +58,14 @@
 <div id="atividades" class="mural">
     <div id="mural">
        
-        {% for atividade in atividades %}
+        {% for atividade in atividades reversed %}
+
             <h1>{{ atividade.nome }}</h1>
+
+        {% empty %}
+
+            <h1>Não existe nenhum atividade</h1>
+
         {% endfor %}
         
 
@@ -34,14 +77,34 @@
 
 <div id="trabalhos" class="mural">
     <div id="mural">
-        <h1>trabalhos</h1>
+
+        {% for trabalho in trabalhos reversed %}
+
+            <h1>{{ trabalho.nome }}</h1>
+
+        {% empty %}
+
+            <h1>Não existe nenhum trabalho</h1>
+
+        {% endfor %}
+
     </div>
 </div>
 
     
 <div id="provas" class="mural">
     <div id="mural">
-        <h1>provas</h1>
+
+        {% for prova in provas reversed %}
+
+            <h1>{{ prova.nome }}</h1>
+
+        {% empty %}
+
+            <h1>Não existe nenhum prova</h1>
+
+        {% endfor %}
+
     </div>
 </div>
 
@@ -49,6 +112,8 @@
     <div id="mural">
         <h1>aulas</h1>
     </div>
+</div>
+
 </div>
 
 <script src="{% static 'javascript/turmas/file.js' %}"></script>

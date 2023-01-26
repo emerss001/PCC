@@ -45,6 +45,10 @@ header {
     border-bottom: 0.5px solid var(--primary-color);
     }
 
+.active {
+    color: red;
+    }
+
 
   .conn{
     display: grid;
@@ -71,7 +75,14 @@ header {
     transition: 0.5s;
   }
   
-  
+  .mural {
+    display: none;
+  }
+  .mural {
+    display: block;
+  }
+
+
   .add {
     height: 45px;
     line-height: 10px;  
@@ -127,10 +138,6 @@ header {
     border-radius: 50%;
     border: #534bf3 2px solid;
     transition: 0.3s;
-  }
-
-  .marked{
-    color: red;
   }
 
 

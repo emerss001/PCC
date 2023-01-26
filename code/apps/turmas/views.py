@@ -2,20 +2,62 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from home.views import nameUser
 from .models import Turma, Post
-from .forms import CriarTurma
+from .forms import CriarTurma, criarPost
 import random, string
 
 
 
+
 @login_required()
-def turmas(request):
+def turmas(request, codigo):
     cc = nameUser(request)
 
-    atividade = Post.objects.filter(tipo='atividade')
-    print(atividade)
+    turma = Turma.objects.get(codigo=codigo)
+    posts = Post.objects.filter(turmaPertecente=turma)
 
-    context = {'atividades': atividade, 'user': cc}
+    context = {
+        'nameUser': cc,
+        'avisos': posts.filter(tipo='aviso'), 
+        'atividades': posts.filter(tipo='atividade'),
+        'trabalhos': posts.filter(tipo='trabalho'),
+        'provas': posts.filter(tipo='prova'),
+        'turma': turma
+    }
+
     return render(request, 'turmas/turmas.html', context)
+
+    
+    
+
+
+@login_required()
+def novoPost(request, codigo, tipo):
+    cc = nameUser(request)
+
+    formPost = criarPost()
+    turma = Turma.objects.get(codigo=codigo)
+    
+
+    if request.method == 'POST':
+        formPost = criarPost(request.POST)        
+        
+        if formPost.is_valid():
+            obj = formPost.save(commit=False)
+            obj.turmaPertecente = turma
+            obj.tipo = tipo
+            obj.save()
+            return redirect('turmas:turmas', codigo=codigo)
+            
+        else:
+            formPost = criarPost()
+
+    else:
+        formPost = criarPost()
+
+
+    context = {'formPost': formPost, 'nameUser': cc, 'turma': turma}
+    return render(request, 'turmas/criarPost.html', context)
+
 
 @login_required()
 def participar(request):
@@ -29,9 +71,9 @@ def participar(request):
         return redirect('home')
 
     else:
-        return render(request, 'turmas/participar.html', cc)    
+        return render(request, 'turmas/participar.html', {'nameUser': cc})    
 
-    return render(request, 'turmas/participar.html', cc)
+    return render(request, 'turmas/participar.html', {'nameUser': cc})
 
 
 @login_required()
